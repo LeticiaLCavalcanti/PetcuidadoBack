@@ -10,7 +10,7 @@ async function createUserController(req, res) {
       email,
       password,
     });
-    res.status(201).send(({ message: "Usuário criado com sucesso" }), token);
+    res.status(201).send(token);
   } catch (e) {
     return res.status(400).send(e.message);
   }
