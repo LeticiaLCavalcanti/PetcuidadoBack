@@ -10,11 +10,12 @@ async function getVaccinesController(req, res) {
 }
 
 async function postVaccinesController(req, res){
-const { name, date, description, photo } = req.body
+const { name, laboratory, date, description, photo } = req.body
 
   try{
     const token = await vaccinesService.postVaccinesService({
         name,
+        laboratory,
         date,
         description,
         photo,
@@ -39,12 +40,12 @@ async function findVaccinesByIdController(req, res) {
 
 async function updateVaccinesController(req, res) {
   try {
-    const { name, date, description, photo } = req.body;
+    const { name, laboratory, date, description, photo } = req.body;
     const { id: vaccineId } = req.params;
     // const userIdLogged = req.userId;
 
     const response = await vaccinesService.updateVaccinesService(
-      { name, date, description, photo },
+      { name, laboratory, date, description, photo },
       vaccineId
       // userIdLogged
     );

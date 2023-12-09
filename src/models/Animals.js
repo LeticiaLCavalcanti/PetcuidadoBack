@@ -9,11 +9,11 @@ const AnimalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    sex: {
+    breed: {
         type: String,
         required: true,
     },
-    breed: {
+    sex: {
         type: String,
         required: true,
     },

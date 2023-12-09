@@ -10,13 +10,14 @@ async function getAnimalsController(req, res) {
 }
 
 async function postAnimalsController(req, res){
-const { name, birth, breed, color, weight, chipNumber, photo } = req.body
+const { name, birth, breed, sex, color, weight, chipNumber, photo } = req.body
 
   try{
     const animals = await animalsService.postAnimalsService({
         name,
         birth,
         breed,
+        sex,
         color,
         weight,
         chipNumber,
@@ -41,11 +42,11 @@ async function findAnimalsByIdController(req, res) {
 
 async function updateAnimalsController(req, res) {
   try {
-    const { name, birth, breed, color, weight, chipNumber, photo } = req.body;
+    const { name, birth, breed, sex, color, weight, chipNumber, photo } = req.body;
     const { id: animalId } = req.params;
 
     const response = await animalsService.updateAnimalsService(
-      { name, birth, breed, color, weight, chipNumber, photo },
+      { name, birth, breed, sex, color, weight, chipNumber, photo },
       animalId
     );
 

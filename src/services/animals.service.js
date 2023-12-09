@@ -19,13 +19,14 @@ import authService from "../services/auth.service.js";
     chipNumber,
     photo,
   }){
-    if (!name || !birth || !breed)
+    if (!name || !birth || !breed || !sex)
     throw new Error("Envie todos os campos obrigatórios para cadastrar");
 
     const animals = await animalsRepositories.postAnimalsRepository({
         name,
         birth,
         breed,
+        sex,
         color,
         weight,
         chipNumber,

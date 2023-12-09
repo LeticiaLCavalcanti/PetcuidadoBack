@@ -5,6 +5,10 @@ const VaccinesSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    laboratory: {
+        type: String,
+        required: true,
+    },
     date: {
         type: String,
         required: true,
