@@ -13,6 +13,7 @@ import authService from "../services/auth.service.js";
     name,
     birth,
     breed,
+    sex,
     color,
     weight,
     chipNumber,
@@ -39,19 +40,20 @@ import authService from "../services/auth.service.js";
   }
 
   async function updateAnimalsService(
-    { name, birth, breed, color, weight, chipNumber, photo },
+    { name, birth, breed, sex, color, weight, chipNumber, photo },
     animalId,
   ) {
-    if (!name && !birth && !breed && !color && !weight && !chipNumber && !photo)
+    if (!name && !birth && !breed && !sex && !color && !weight && !chipNumber && !photo)
       throw new Error("Envie ao menos um campo para atualizar usuário");
   
-    // const animals = await animalsRepositories.findByIdAnimalsRepository(animalId);
+    const animals = await animalsRepositories.findByIdAnimalsRepository(animalId);
   
     await animalsRepositories.updateAnimalsRepository(
       animalId,
       name,
       birth,
       breed,
+      sex,
       color,
       weight,
       chipNumber,
@@ -71,6 +73,7 @@ import authService from "../services/auth.service.js";
       name: animals.name,
       birth: animals.birth,
       breed: animals.breed,
+      sex: animals.sex,
       color: animals.color,
       weight: animals.weight,
       chipNumber: animals.chipNumber,
@@ -85,8 +88,6 @@ import authService from "../services/auth.service.js";
   
     await animalsRepositories.deleteAnimalsRepository(id);
   }
-
-
 
   export default {
     getAnimalsService,

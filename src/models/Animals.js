@@ -9,6 +9,10 @@ const AnimalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    sex: {
+        type: String,
+        required: true,
+    },
     breed: {
         type: String,
         required: true,
