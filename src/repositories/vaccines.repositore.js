@@ -4,14 +4,12 @@ const getVaccinesRepository = () => Vaccines.find();
 
 const postVaccinesRepository = ({
     name,
-    laboratory,
     date,
     description,
     photo
 }) => 
 Vaccines.create({
     name,
-    laboratory,
     date,
     description,
     photo
@@ -22,7 +20,6 @@ const findByIdVaccinesRepository = (id) => Vaccines.findById(id);
 const updateVaccinesRepository = (
     id,
     name,
-    laboratory,
     date,
     description,
     photo
@@ -33,7 +30,6 @@ Vaccines.findOneAndUpdate(
     },
     {
         name,
-        laboratory,
         date,
         description,
         photo

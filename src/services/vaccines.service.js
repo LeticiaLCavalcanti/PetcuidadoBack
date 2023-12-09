@@ -11,17 +11,15 @@ import authService from "../services/auth.service.js";
 
   async function postVaccinesService({
     name,
-    laboratory,
     date,
     description,
     photo,
   }){
-    if (!name || !laboratory || !date)
+    if (!name || !date)
     throw new Error("Envie todos os campos obrigatórios para cadastrar");
 
     const vaccines = await vaccinesRepositories.postVaccinesRepository({
         name,
-        laboratory,
         date,
         description,
         photo,
@@ -35,10 +33,10 @@ import authService from "../services/auth.service.js";
   }
 
   async function updateVaccinesService(
-    { name, laboratory, date, description, photo },
+    { name, date, description, photo },
     vaccineId,
   ) {
-    if (!name && laboratory && !date && !description && !photo)
+    if (!name && !date && !description && !photo)
       throw new Error("Envie ao menos um campo para atualizar os dados da vacina");
   
     // const vaccines = await vaccinesRepositories.findByIdVaccinesRepository(vaccineId);
@@ -46,7 +44,6 @@ import authService from "../services/auth.service.js";
     await vaccinesRepositories.updateVaccinesRepository(
       vaccineId,
       name,
-      laboratory,
       date,
       description,
       photo,
@@ -63,7 +60,6 @@ import authService from "../services/auth.service.js";
     return {
       vaccineId: vaccines._id,
       name: vaccines.name,
-      laboratory: vaccines.laboratory,
       date: vaccines.date,
       description: vaccines.description,
       photo: vaccines.photo,

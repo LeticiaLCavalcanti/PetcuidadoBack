@@ -13,10 +13,6 @@ const AnimalSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    sex: {
-        type: String,
-        required: true,
-    },
     color: {
         type: String,
         required: false,

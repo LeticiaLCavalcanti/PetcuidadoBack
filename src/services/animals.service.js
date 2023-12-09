@@ -13,20 +13,18 @@ import authService from "../services/auth.service.js";
     name,
     birth,
     breed,
-    sex,
     color,
     weight,
     chipNumber,
     photo,
   }){
-    if (!name || !birth || !breed || !sex)
+    if (!name || !birth || !breed)
     throw new Error("Envie todos os campos obrigatórios para cadastrar");
 
     const animals = await animalsRepositories.postAnimalsRepository({
         name,
         birth,
         breed,
-        sex,
         color,
         weight,
         chipNumber,
@@ -41,10 +39,10 @@ import authService from "../services/auth.service.js";
   }
 
   async function updateAnimalsService(
-    { name, birth, breed, sex, color, weight, chipNumber, photo },
+    { name, birth, breed, color, weight, chipNumber, photo },
     animalId,
   ) {
-    if (!name && !birth && !breed && !sex && !color && !weight && !chipNumber && !photo)
+    if (!name && !birth && !breed && !color && !weight && !chipNumber && !photo)
       throw new Error("Envie ao menos um campo para atualizar usuário");
   
     const animals = await animalsRepositories.findByIdAnimalsRepository(animalId);
@@ -54,7 +52,6 @@ import authService from "../services/auth.service.js";
       name,
       birth,
       breed,
-      sex,
       color,
       weight,
       chipNumber,
@@ -74,7 +71,6 @@ import authService from "../services/auth.service.js";
       name: animals.name,
       birth: animals.birth,
       breed: animals.breed,
-      sex: animals.sex,
       color: animals.color,
       weight: animals.weight,
       chipNumber: animals.chipNumber,
