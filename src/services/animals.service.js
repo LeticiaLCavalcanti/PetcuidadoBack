@@ -1,5 +1,4 @@
 import animalsRepositories from "../repositories/animals.repositore.js";
-import authService from "../services/auth.service.js";
 
   async function getAnimalsService() {
       const animals = await animalsRepositories.getAnimalsRepository();
@@ -32,10 +31,8 @@ import authService from "../services/auth.service.js";
       });
     
       if (!animals) throw new Error("Erro ao cadastrar o animal, tente novamente");
-    
-      const token = authService.generateToken(animals.id);
-      
-      return token;
+
+      return animals;
   }
 
   async function updateAnimalsService(

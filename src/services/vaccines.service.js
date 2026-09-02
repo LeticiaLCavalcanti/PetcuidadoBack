@@ -1,5 +1,4 @@
 import vaccinesRepositories from "../repositories/vaccines.repositore.js";
-import authService from "../services/auth.service.js";
 
   async function getVaccinesService() {
       const vaccines = await vaccinesRepositories.getVaccinesRepository();
@@ -26,10 +25,8 @@ import authService from "../services/auth.service.js";
       });
     
       if (!vaccines) throw new Error("Erro ao cadastrar os dados da vacina, tente novamente");
-    
-      const token = authService.generateToken(vaccines.id);
-      
-      return token;
+
+      return vaccines;
   }
 
   async function updateVaccinesService(

@@ -8,8 +8,8 @@ async function createUserService({
   email,
   password,
 }) {
-  if (!username || !name || !email || !password)
-    throw new Error("Envie todos os campos para cadastrar");
+  if (!name || !email || !password)
+    throw new Error("Envie name, email e password para cadastrar");
 
   const foundUser = await userRepositories.findByEmailUserRepository(email);
 

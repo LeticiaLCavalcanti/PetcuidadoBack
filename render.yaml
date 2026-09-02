@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: api-petcuidado
+    runtime: node
+    plan: free
+    region: oregon
+    branch: master
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_NAME
+        value: PetCuidado
+      # Definidos manualmente no dashboard (Environment > Add Environment Variable):
+      #   DATABASE_URL -> string de conexão do Atlas
+      #   SECRET       -> chave de assinatura do JWT (openssl rand -hex 32)
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET
+        sync: false

@@ -5,7 +5,7 @@ async function getVaccinesController(req, res) {
     const vaccines = await vaccinesService.getVaccinesService();
     return res.send(vaccines);
   } catch (e) {
-    return res.status(404).send(e.message);
+    return res.status(404).json({ message: e.message });
   }
 }
 
@@ -13,15 +13,15 @@ async function postVaccinesController(req, res){
 const { name, date, description, photo } = req.body
 
   try{
-    const token = await vaccinesService.postVaccinesService({
+    const vaccines = await vaccinesService.postVaccinesService({
         name,
         date,
         description,
         photo,
     });
-    res.status(201).send(token);
+    return res.status(201).json(vaccines);
   } catch(e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -33,7 +33,7 @@ async function findVaccinesByIdController(req, res) {
     );
     return res.send(vaccines);
   } catch (e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -51,7 +51,7 @@ async function updateVaccinesController(req, res) {
 
     return res.send(response);
   } catch (e) {
-    res.status(400).send(e.message);
+    res.status(400).json({ message: e.message });
   }
 }
 
@@ -63,7 +63,7 @@ async function deleteVaccinesController(req, res){
     await vaccinesService.deleteVaccinesService(id);
     return res.send({ message: "Vacina deletada com sucesso" });
   } catch (e) {
-    return res.status(500).send(e.message);
+    return res.status(500).json({ message: e.message });
   }
 }
 

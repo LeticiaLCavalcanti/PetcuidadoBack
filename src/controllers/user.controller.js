@@ -10,9 +10,9 @@ async function createUserController(req, res) {
       email,
       password,
     });
-    res.status(201).send(token);
+    return res.status(201).json({ token });
   } catch (e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -21,7 +21,7 @@ async function findAllUserController(req, res) {
     const users = await userService.findAllUserService();
     return res.send(users);
   } catch (e) {
-    return res.status(404).send(e.message);
+    return res.status(404).json({ message: e.message });
   }
 }
 
@@ -33,7 +33,7 @@ async function findUserByIdController(req, res) {
     );
     return res.send(user);
   } catch (e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -51,7 +51,7 @@ async function updateUserController(req, res) {
 
     return res.send(response);
   } catch (e) {
-    res.status(400).send(e.message);
+    res.status(400).json({ message: e.message });
   }
 }
 

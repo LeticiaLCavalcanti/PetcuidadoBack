@@ -5,7 +5,7 @@ async function getAnimalsController(req, res) {
     const animals = await animalsService.getAnimalsService();
     return res.send(animals);
   } catch (e) {
-    return res.status(404).send(e.message);
+    return res.status(404).json({ message: e.message });
   }
 }
 
@@ -22,9 +22,9 @@ const { name, birth, breed, color, weight, chipNumber, photo } = req.body
         chipNumber,
         photo,
     });
-    res.status(201).send(animals);
+    return res.status(201).json(animals);
   } catch(e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -35,7 +35,7 @@ async function findAnimalsByIdController(req, res) {
     );
     return res.send(animals);
   } catch (e) {
-    return res.status(400).send(e.message);
+    return res.status(400).json({ message: e.message });
   }
 }
 
@@ -51,7 +51,7 @@ async function updateAnimalsController(req, res) {
 
     return res.send(response);
   } catch (e) {
-    res.status(400).send(e.message);
+    res.status(400).json({ message: e.message });
   }
 }
 
@@ -62,7 +62,7 @@ async function deleteAnimalsController(req, res){
     await animalsService.deleteAnimalsService(id);
     return res.send({ message: "Animal deletado com sucesso" });
   } catch (e) {
-    return res.status(500).send(e.message);
+    return res.status(500).json({ message: e.message });
   }
 }
 
