@@ -11,7 +11,20 @@ const useMemory = process.env.SMOKE_MEMORY === "1";
 let memoryServer;
 
 if (useMemory) {
-  const { MongoMemoryServer } = await import("mongodb-memory-server");
+  // Não é dependência do projeto de propósito: instalá-la quebra o build do
+  // Render, que roda `yarn` e traz devDependencies junto.
+  // Instale sob demanda com: npm i --no-save mongodb-memory-server
+  let MongoMemoryServer;
+  try {
+    ({ MongoMemoryServer } = await import("mongodb-memory-server"));
+  } catch {
+    console.error(
+      "mongodb-memory-server não está instalado.\n" +
+        "  Instale sob demanda:  npm i --no-save mongodb-memory-server\n" +
+        "  Ou rode contra o Atlas:  npm run smoke"
+    );
+    process.exit(1);
+  }
   memoryServer = await MongoMemoryServer.create();
   process.env.DATABASE_URL = memoryServer.getUri();
   process.env.SECRET ||= "smoke-test-secret";

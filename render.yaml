@@ -5,7 +5,7 @@ services:
     plan: free
     region: oregon
     branch: master
-    buildCommand: npm ci --omit=dev
+    buildCommand: yarn install --production
     startCommand: npm start
     healthCheckPath: /health
     envVars:

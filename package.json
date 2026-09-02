@@ -5,18 +5,13 @@
   "main": "server.js",
   "type": "module",
   "engines": {
-    "node": "20.x"
+    "node": ">=20"
   },
   "scripts": {
     "start": "node --no-warnings server.js",
     "dev": "nodemon --no-warnings server.js ",
     "smoke": "node --no-warnings scripts/smoke.mjs",
     "smoke:memory": "SMOKE_MEMORY=1 node --no-warnings scripts/smoke.mjs"
-  },
-  "config": {
-    "mongodbMemoryServer": {
-      "disablePostinstall": "1"
-    }
   },
   "keywords": [],
   "author": "Leticia Cavalcanti",
@@ -32,8 +27,5 @@
     "nodemon": "^3.0.1",
     "swagger": "^0.7.5",
     "swagger-ui-express": "^5.0.0"
-  },
-  "devDependencies": {
-    "mongodb-memory-server": "^11.2.0"
   }
 }
