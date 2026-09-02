@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: api-petcuidado
+    name: api-petCuidado
     runtime: node
     plan: free
     region: oregon
