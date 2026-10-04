@@ -1,12 +1,19 @@
 import mongoose from "mongoose";
 
 const AnimalSchema = new mongoose.Schema({
+    // Dono do animal. Preenchido a partir do token, nunca do corpo da request.
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true,
+    },
     name: {
         type: String,
         required: true,
     },
     birth: {
-        type: String,
+        type: Date,
         required: true,
     },
     breed: {
@@ -17,9 +24,11 @@ const AnimalSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    // Em quilos.
     weight: {
-        type: String,
+        type: Number,
         required: false,
+        min: 0,
     },
     chipNumber: {
         type: String,

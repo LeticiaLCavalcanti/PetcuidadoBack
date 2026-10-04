@@ -1,92 +1,116 @@
+import mongoose from "mongoose";
+
 import animalsRepositories from "../repositories/animals.repositore.js";
+import vaccinesRepositories from "../repositories/vaccines.repositore.js";
+import { badRequest, notFound } from "../errors/AppError.js";
+import { parseISODate } from "../utils/date.js";
 
-  async function getAnimalsService() {
-      const animals = await animalsRepositories.getAnimalsRepository();
-    
-      if (animals.length === 0) throw new Error("Não há nenhum animal cadastrado");
-    
-      return animals;
-    }
+/** Converte a data recebida, recusando o que não for `YYYY-MM-DD` válido. */
+function requireDate(value, field) {
+  const date = parseISODate(value);
 
-  async function postAnimalsService({
+  if (!date) throw badRequest(`Envie ${field} no formato YYYY-MM-DD`);
+
+  return date;
+}
+
+/** Peso é opcional, mas quando vem precisa ser um número de quilos. */
+function optionalWeight(value) {
+  if (value === undefined || value === null || value === "") return undefined;
+
+  const weight = Number(value);
+
+  if (!Number.isFinite(weight) || weight < 0)
+    throw badRequest("Peso deve ser um número em quilos (ex.: 7.5)");
+
+  return weight;
+}
+
+/** Lista apenas os animais do usuário logado. Sem animais, devolve `[]`. */
+async function getAnimalsService(userId) {
+  return animalsRepositories.getAnimalsRepository(userId);
+}
+
+async function postAnimalsService(
+  { name, birth, breed, color, weight, chipNumber, photo },
+  userId
+) {
+  if (!name || !birth || !breed)
+    throw badRequest("Envie todos os campos obrigatórios para cadastrar");
+
+  const animals = await animalsRepositories.postAnimalsRepository({
+    user: userId,
     name,
-    birth,
+    birth: requireDate(birth, "a data de nascimento"),
     breed,
     color,
-    weight,
+    weight: optionalWeight(weight),
     chipNumber,
     photo,
-  }){
-    if (!name || !birth || !breed)
-    throw new Error("Envie todos os campos obrigatórios para cadastrar");
+  });
 
-    const animals = await animalsRepositories.postAnimalsRepository({
-        name,
-        birth,
-        breed,
-        color,
-        weight,
-        chipNumber,
-        photo,
-      });
-    
-      if (!animals) throw new Error("Erro ao cadastrar o animal, tente novamente");
+  if (!animals) throw badRequest("Erro ao cadastrar o animal, tente novamente");
 
-      return animals;
-  }
+  return animals;
+}
 
-  async function updateAnimalsService(
-    { name, birth, breed, color, weight, chipNumber, photo },
+/**
+ * Busca o animal garantindo que ele pertence ao usuário. Responde 404 tanto
+ * para inexistente quanto para "é de outro dono", para não revelar a
+ * existência de registros alheios.
+ */
+async function findAnimalsByIdService(id, userId) {
+  if (!mongoose.Types.ObjectId.isValid(id)) throw badRequest("ID inválido!");
+
+  const animal = await animalsRepositories.findByIdAndUserAnimalsRepository(
+    id,
+    userId
+  );
+
+  if (!animal) throw notFound("Animal não encontrado");
+
+  return animal;
+}
+
+async function updateAnimalsService(
+  { name, birth, breed, color, weight, chipNumber, photo },
+  animalId,
+  userId
+) {
+  if (!name && !birth && !breed && !color && !weight && !chipNumber && !photo)
+    throw badRequest("Envie ao menos um campo para atualizar o animal");
+
+  await findAnimalsByIdService(animalId, userId);
+
+  await animalsRepositories.updateAnimalsRepository(
     animalId,
-  ) {
-    if (!name && !birth && !breed && !color && !weight && !chipNumber && !photo)
-      throw new Error("Envie ao menos um campo para atualizar usuário");
-  
-    const animals = await animalsRepositories.findByIdAnimalsRepository(animalId);
-  
-    await animalsRepositories.updateAnimalsRepository(
-      animalId,
-      name,
-      birth,
-      breed,
-      color,
-      weight,
-      chipNumber,
-      photo 
-    );
-  
-    return { message: "Animal atualizado com sucesso!" };
-  }
+    name,
+    birth === undefined ? undefined : requireDate(birth, "a data de nascimento"),
+    breed,
+    color,
+    optionalWeight(weight),
+    chipNumber,
+    photo
+  );
 
-  async function findAnimalsByIdService(id) {
-    const animals = await animalsRepositories.findByIdAnimalsRepository(id);
-  
-    if (!animals) throw new Error("Animal não encontrado");
-  
-    return {
-      animalId: animals._id,
-      name: animals.name,
-      birth: animals.birth,
-      breed: animals.breed,
-      color: animals.color,
-      weight: animals.weight,
-      chipNumber: animals.chipNumber,
-      photo: animals.photo,
-    };
-  }
+  return { message: "Animal atualizado com sucesso!" };
+}
 
-  async function deleteAnimalsService(id){
-    const animal = await findAnimalsByIdService(id);
+async function deleteAnimalsService(id, userId) {
+  await findAnimalsByIdService(id, userId);
 
-    if (!animal) throw new Error("Animal não encontrado");
-  
-    await animalsRepositories.deleteAnimalsRepository(id);
-  }
+  // O animal sai primeiro de propósito: não há transação aqui, e se o segundo
+  // passo falhar é melhor sobrar vacina órfã (invisível nas listagens, e o
+  // script de migração limpa) do que apagar as vacinas e manter o pet.
+  await animalsRepositories.deleteAnimalsRepository(id);
 
-  export default {
-    getAnimalsService,
-    postAnimalsService,
-    updateAnimalsService,
-    findAnimalsByIdService,
-    deleteAnimalsService
-  }
+  await vaccinesRepositories.deleteVaccinesByAnimalRepository(id);
+}
+
+export default {
+  getAnimalsService,
+  postAnimalsService,
+  updateAnimalsService,
+  findAnimalsByIdService,
+  deleteAnimalsService,
+};

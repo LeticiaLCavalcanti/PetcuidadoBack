@@ -11,7 +11,8 @@
     "start": "node --no-warnings server.js",
     "dev": "nodemon --no-warnings server.js ",
     "smoke": "node --no-warnings scripts/smoke.mjs",
-    "smoke:memory": "SMOKE_MEMORY=1 node --no-warnings scripts/smoke.mjs"
+    "smoke:memory": "SMOKE_MEMORY=1 node --no-warnings scripts/smoke.mjs",
+    "migrate": "node --no-warnings scripts/migrate.mjs"
   },
   "keywords": [],
   "author": "Leticia Cavalcanti",
