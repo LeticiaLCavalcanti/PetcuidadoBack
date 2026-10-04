@@ -1,14 +1,22 @@
 import Vaccines from "../models/Vaccines.js";
 
-const getVaccinesRepository = () => Vaccines.find();
+/** Vacinas de um animal específico. */
+const getVaccinesByAnimalRepository = (animalId) =>
+    Vaccines.find({ animal: animalId });
+
+/** Vacinas de todos os animais informados (ex.: todos os pets do usuário). */
+const getVaccinesByAnimalsRepository = (animalIds) =>
+    Vaccines.find({ animal: { $in: animalIds } });
 
 const postVaccinesRepository = ({
+    animal,
     name,
     date,
     description,
     photo
-}) => 
+}) =>
 Vaccines.create({
+    animal,
     name,
     date,
     description,
@@ -23,7 +31,7 @@ const updateVaccinesRepository = (
     date,
     description,
     photo
-) => 
+) =>
 Vaccines.findOneAndUpdate(
     {
         _id: id,
@@ -43,10 +51,17 @@ function deleteVaccinesRepository(id) {
     return Vaccines.findOneAndDelete({ _id: id });
 }
 
+/** Remove todas as vacinas de um animal (usado ao excluir o animal). */
+function deleteVaccinesByAnimalRepository(animalId) {
+    return Vaccines.deleteMany({ animal: animalId });
+}
+
 export default {
-    getVaccinesRepository,
+    getVaccinesByAnimalRepository,
+    getVaccinesByAnimalsRepository,
     postVaccinesRepository,
     findByIdVaccinesRepository,
     updateVaccinesRepository,
-    deleteVaccinesRepository
+    deleteVaccinesRepository,
+    deleteVaccinesByAnimalRepository
 }
